@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class RestfulWebServicesApplication {
 
 	public static void main(String[] args) {
