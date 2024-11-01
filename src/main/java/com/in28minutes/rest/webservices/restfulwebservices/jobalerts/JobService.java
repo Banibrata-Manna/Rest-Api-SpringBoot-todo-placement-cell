@@ -11,6 +11,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JobService {
+	
+	private JobRepository repository;
+	
+	public JobService(JobRepository repository) {
+		this.repository = repository;
+	}
+	
 	private static List<Job> jobs = new ArrayList<>();
 	private static int jobCount = 0;
 	private static Map<String, String> map = new HashMap<String, String>();
@@ -25,12 +32,14 @@ public class JobService {
 				"7 to 9 LPA", "Java, SpringBoot", new Date(2024, 11, 18), map));
 	}
 	
-	public void addJob(Job job) {
+	public Job saveJob(Job job) {
 		jobs.add(job);
 		jobCount++;
+		repository.save(job);
+		return job;
 	}
 	
 	public List<Job> getAllJobs(){
-		return jobs;
+		return repository.findAll();
 	}
 }

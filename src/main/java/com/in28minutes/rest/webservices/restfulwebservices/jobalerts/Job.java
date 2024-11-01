@@ -3,7 +3,16 @@ package com.in28minutes.rest.webservices.restfulwebservices.jobalerts;
 import java.util.Date;
 import java.util.Map;
 
+import com.in28minutes.rest.webservices.restfulwebservices.utils.JsonConverter;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Job {
+	@Id
 	private String jobId;
 	private String jobRole;
 	private String companyName;
@@ -11,6 +20,8 @@ public class Job {
 	private String packageOffered;
 	private String skillsRequired;
 	private Date dateOfPost;
+	@Column(columnDefinition = "json")
+	@Convert(converter = JsonConverter.class)
 	private Map<String, String> otherDetails;
 	public Job() {
 		super();
