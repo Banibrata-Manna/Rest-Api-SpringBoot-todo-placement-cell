@@ -1,10 +1,12 @@
 package com.in28minutes.rest.webservices.restfulwebservices.student;
 
+import com.in28minutes.rest.webservices.restfulwebservices.users.UserInterface;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class Student {
+public class Student implements UserInterface {
 	@Id
 	private String enrollmentNumber;
 	private String name;
@@ -83,5 +85,15 @@ public class Student {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return enrollmentNumber;
+	}
+	@Override
+	public String getRole() {
+		// TODO Auto-generated method stub
+		return "ROLE_STUDENT";
 	}	
 }
