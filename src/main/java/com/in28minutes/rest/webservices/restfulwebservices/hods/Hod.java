@@ -1,12 +1,11 @@
 package com.in28minutes.rest.webservices.restfulwebservices.hods;
 
-import com.in28minutes.rest.webservices.restfulwebservices.users.UserInterface;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class Hod implements UserInterface {
+public class Hod {
 	@Id
 	private String id;
 	private String name;
@@ -60,15 +59,4 @@ public class Hod implements UserInterface {
 		return "Hod [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", department="
 				+ department + "]";
 	}
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return id;
-	}
-	@Override
-	public String getRole() {
-		// TODO Auto-generated method stub
-		return "ROLE_HOD";
-	}
-	
 }

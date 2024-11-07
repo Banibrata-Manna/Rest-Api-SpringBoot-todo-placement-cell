@@ -1,32 +1,55 @@
 package com.in28minutes.rest.webservices.restfulwebservices.student;
 
-import com.in28minutes.rest.webservices.restfulwebservices.users.UserInterface;
 
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.in28minutes.rest.webservices.restfulwebservices.jobalerts.Job;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 
 @Entity
-public class Student implements UserInterface {
+public class Student {
 	@Id
 	private String enrollmentNumber;
 	private String name;
 	private String password;
-	private String emailId;
+	private String email;
 	private long phoneNumber;
 	private String program;
 	private int graduationYear;
 	private String gender;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(
+		name = "student_job",
+		joinColumns = @JoinColumn(name = "enrollment_number"),
+		inverseJoinColumns = @JoinColumn(name = "job_id")
+	)
+	@JsonManagedReference
+	private Set<Job> appliedJobs;
+	public Set<Job> getAppliedJobs() {
+		return appliedJobs;
+	}
+	public void setAppliedJobs(Set<Job> appliedJobs) {
+		this.appliedJobs = appliedJobs;
+	}
 	public Student() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Student(String enrollmentNumber, String name, String password, String emailId, long phoneNumber,
+	public Student(String enrollmentNumber, String name, String password, String email, long phoneNumber,
 			String program, int graduationYear, String gender) {
 		super();
 		this.enrollmentNumber = enrollmentNumber;
 		this.name = name;
 		this.password = password;
-		this.emailId = emailId;
+		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.program = program;
 		this.graduationYear = graduationYear;
@@ -44,11 +67,11 @@ public class Student implements UserInterface {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getEmailId() {
-		return emailId;
+	public String getEmail() {
+		return email;
 	}
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public long getPhoneNumber() {
 		return phoneNumber;
@@ -76,7 +99,7 @@ public class Student implements UserInterface {
 	}
 	@Override
 	public String toString() {
-		return "Student [enrollmentNumber=" + enrollmentNumber + ", name=" + name + ", emailId=" + emailId
+		return "Student [enrollmentNumber=" + enrollmentNumber + ", name=" + name + ", email=" + email
 				+ ", phoneNumber=" + phoneNumber + ", program=" + program + ", graduationYear=" + graduationYear
 				+ ", gender=" + gender + "]";
 	}
@@ -86,14 +109,4 @@ public class Student implements UserInterface {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return enrollmentNumber;
-	}
-	@Override
-	public String getRole() {
-		// TODO Auto-generated method stub
-		return "ROLE_STUDENT";
-	}	
 }

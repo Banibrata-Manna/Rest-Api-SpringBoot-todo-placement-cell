@@ -16,7 +16,7 @@ public class JsonConverter implements AttributeConverter<Map<String, Object>, St
     public String convertToDatabaseColumn(Map<String, Object> attribute) {
         try {
             return objectMapper.writeValueAsString(attribute);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException("Error converting map to JSON", e);
         }
     }
@@ -25,7 +25,7 @@ public class JsonConverter implements AttributeConverter<Map<String, Object>, St
     public Map<String, Object> convertToEntityAttribute(String dbData) {
         try {
             return objectMapper.readValue(dbData, Map.class);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException("Error converting JSON to map", e);
         }
     }

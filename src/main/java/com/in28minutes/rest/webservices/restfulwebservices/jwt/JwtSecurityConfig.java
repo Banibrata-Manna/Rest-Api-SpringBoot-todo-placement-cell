@@ -6,7 +6,6 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -31,6 +31,12 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import com.in28minutes.rest.webservices.restfulwebservices.admin.Admin;
+import com.in28minutes.rest.webservices.restfulwebservices.admin.AdminRepository;
+import com.in28minutes.rest.webservices.restfulwebservices.hods.Hod;
+import com.in28minutes.rest.webservices.restfulwebservices.hods.HodRepository;
+import com.in28minutes.rest.webservices.restfulwebservices.student.Student;
+import com.in28minutes.rest.webservices.restfulwebservices.student.StudentRepository;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -41,6 +47,19 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class JwtSecurityConfig {
+	
+	private StudentRepository studentRepository;
+	
+	private AdminRepository adminRepository;
+	
+	private HodRepository hodRepository;
+	
+	public JwtSecurityConfig(StudentRepository studentRepository,
+			AdminRepository adminRepository, HodRepository hodRepository) {
+		this.studentRepository = studentRepository;
+		this.adminRepository = adminRepository;
+		this.hodRepository = hodRepository;
+	}
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector introspector) throws Exception {
@@ -75,16 +94,53 @@ public class JwtSecurityConfig {
         return new ProviderManager(authenticationProvider);
     }
 
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails user = User.withUsername("Banibrata")
+//                                .password("{noop}dummy")
+//                                .authorities("read")
+//                                .roles("USER")
+//                                .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
+    
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("Banibrata")
-                                .password("{noop}dummy")
-                                .authorities("read")
-                                .roles("USER")
-                                .build();
+        return email -> {
+            UserDetails userDetails = null;
 
-        return new InMemoryUserDetailsManager(user);
+            if (studentRepository.findByEmail(email).isPresent()) {
+                Student student = studentRepository.findByEmail(email).get();
+                userDetails = User.withUsername(student.getEmail())
+                        .password(student.getPassword())
+                        .roles("STUDENT")
+                        .build();
+                System.out.println(student.toString());
+            } else if (hodRepository.findByEmail(email).isPresent()) {
+                Hod hod = hodRepository.findByEmail(email).get();
+                userDetails = User.withUsername(hod.getEmail())
+                        .password(hod.getPassword())
+                        .roles("HOD")
+                        .build();
+                System.out.println(hod.toString());
+            } else if (adminRepository.findByEmail(email).isPresent()) {
+                Admin admin = adminRepository.findByEmail(email).get();
+                userDetails = User.withUsername(admin.getEmail())
+                        .password(admin.getPassword())
+                        .roles("ADMIN")
+                        .build();
+                System.out.println(admin.toString());
+            }
+
+            if (userDetails == null) {
+                throw new UsernameNotFoundException("User not found with email: " + email);
+            }
+//            System.out.println(userDetails.toString());
+            return userDetails;
+        };
     }
+
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {

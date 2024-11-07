@@ -2,13 +2,18 @@ package com.in28minutes.rest.webservices.restfulwebservices.jobalerts;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.in28minutes.rest.webservices.restfulwebservices.student.Student;
 import com.in28minutes.rest.webservices.restfulwebservices.utils.JsonConverter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Job {
@@ -23,6 +28,15 @@ public class Job {
 	@Column(columnDefinition = "json")
 	@Convert(converter = JsonConverter.class)
 	private Map<String, String> otherDetails;
+	@ManyToMany(mappedBy = "appliedJobs", fetch = FetchType.EAGER)
+	@JsonBackReference
+	private Set<Student> applicants;
+	public Set<Student> getApplicants() {
+		return applicants;
+	}
+	public void setApplicants(Set<Student> applicants) {
+		this.applicants = applicants;
+	}
 	public Job() {
 		super();
 		// TODO Auto-generated constructor stub

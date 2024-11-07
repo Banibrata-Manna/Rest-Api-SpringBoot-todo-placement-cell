@@ -1,12 +1,10 @@
 package com.in28minutes.rest.webservices.restfulwebservices.admin;
 
-import com.in28minutes.rest.webservices.restfulwebservices.users.UserInterface;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class Admin implements UserInterface {
+public class Admin {
 	@Id
 	private String id;
 	private String name;
@@ -48,16 +46,6 @@ public class Admin implements UserInterface {
 	@Override
 	public String toString() {
 		return "Admin [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + "]";
-	}
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return id;
-	}
-	@Override
-	public String getRole() {
-		// TODO Auto-generated method stub
-		return "ROLE_ADMIN";
 	}
 	
 }
