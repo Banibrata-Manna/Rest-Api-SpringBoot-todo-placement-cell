@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToMany;
 @Entity
 public class Student {
 	@Id
+	private String id;
 	private String enrollmentNumber;
 	private String name;
 	private String password;
@@ -43,9 +44,10 @@ public class Student {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Student(String enrollmentNumber, String name, String password, String email, long phoneNumber,
+	public Student(String id, String enrollmentNumber, String name, String password, String email, long phoneNumber,
 			String program, int graduationYear, String gender) {
 		super();
+		this.id = id;
 		this.enrollmentNumber = enrollmentNumber;
 		this.name = name;
 		this.password = password;
@@ -54,6 +56,12 @@ public class Student {
 		this.program = program;
 		this.graduationYear = graduationYear;
 		this.gender = gender;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getEnrollmentNumber() {
 		return enrollmentNumber;
@@ -99,7 +107,7 @@ public class Student {
 	}
 	@Override
 	public String toString() {
-		return "Student [enrollmentNumber=" + enrollmentNumber + ", name=" + name + ", email=" + email
+		return "Student [id=" + id + ", name=" + name + ", email=" + email
 				+ ", phoneNumber=" + phoneNumber + ", program=" + program + ", graduationYear=" + graduationYear
 				+ ", gender=" + gender + "]";
 	}

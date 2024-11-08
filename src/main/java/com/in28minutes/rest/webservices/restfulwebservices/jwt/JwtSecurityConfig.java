@@ -107,26 +107,26 @@ public class JwtSecurityConfig {
     
     @Bean
     public UserDetailsService userDetailsService() {
-        return email -> {
+        return id -> {
             UserDetails userDetails = null;
 
-            if (studentRepository.findByEmail(email).isPresent()) {
-                Student student = studentRepository.findByEmail(email).get();
-                userDetails = User.withUsername(student.getEmail())
+            if (studentRepository.findById(id).isPresent()) {
+                Student student = studentRepository.findById(id).get();
+                userDetails = User.withUsername(student.getId())
                         .password(student.getPassword())
                         .roles("STUDENT")
                         .build();
                 System.out.println(student.toString());
-            } else if (hodRepository.findByEmail(email).isPresent()) {
-                Hod hod = hodRepository.findByEmail(email).get();
-                userDetails = User.withUsername(hod.getEmail())
+            } else if (hodRepository.findById(id).isPresent()) {
+                Hod hod = hodRepository.findById(id).get();
+                userDetails = User.withUsername(hod.getId())
                         .password(hod.getPassword())
                         .roles("HOD")
                         .build();
                 System.out.println(hod.toString());
-            } else if (adminRepository.findByEmail(email).isPresent()) {
-                Admin admin = adminRepository.findByEmail(email).get();
-                userDetails = User.withUsername(admin.getEmail())
+            } else if (adminRepository.findById(id).isPresent()) {
+                Admin admin = adminRepository.findById(id).get();
+                userDetails = User.withUsername(admin.getId())
                         .password(admin.getPassword())
                         .roles("ADMIN")
                         .build();
@@ -134,7 +134,7 @@ public class JwtSecurityConfig {
             }
 
             if (userDetails == null) {
-                throw new UsernameNotFoundException("User not found with email: " + email);
+                throw new UsernameNotFoundException("User not found with email: " + id);
             }
 //            System.out.println(userDetails.toString());
             return userDetails;
